@@ -14,7 +14,9 @@ A reward of $5 today would be more than $5 offered tomorrow or later in time <br
 Total Reward (rep. by Rt) i.e. Rt = rt + Ɣ^1r(t+1) + Ɣ^2r(t+2)+ ....... <br>
 Defining a Q-function <br>
 Def: Q function takes two inputs i.e. state st  and action at and essentially return the total future reward considering you you take the action <br>
-Q-(st,at) = E[Rt|st, at]
+Q-(st,at) = E[Rt|st, at] <br>
+Question: Now once that we know what is the Q function, what action should one take ? <br>
+Answer: The actions should be the one that maximies the reward function <br>
 
 
 
