@@ -23,7 +23,7 @@ There are two possible ways to train a deep Q network
 2. Train a network for all possible actions given state t which would result in Qt(S,a1),Qt(S,a2) etc and the final output can be  Pi(s) = argmaxQ(s,a)
 
 **Policy Function** <br>
-Policy function takes state st as input and returns the probabilistic distribution of all possible action. Policy function inorder to determine the probabilistic function would try to maximize the Q function for a given function. <br>
+Policy function takes state st as input and returns the probabilistic distribution of all possible action. The ultimate goal is to find a optimal policy function that would try to optimize agent's long term reward
 
 
 
