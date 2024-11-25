@@ -17,7 +17,13 @@ Def: Q function takes two inputs i.e. state st  and action at and essentially re
 Q-(st,at) = E[Rt|st, at] <br>
 Question: Now once that we know what is the Q function, what action should one take ? <br>
 Answer: The actions should be the one that maximies the reward function <br>
+### Training a Deep Q Network 
+There are two possible ways to train a deep Q network
+1. Train a network at all possible states and for a given action t which would result in Qt(S,a)
+2. Train a network for all possible actions given state t which would result in Qt(S,a1),Qt(S,a2) etc and the final output can be  Pi(s) = argmaxQ(s,a)
 
+**Policy Function** <br>
+Policy function takes state st as input and returns the probabilistic distribution of all possible action. Policy function inorder to determine the probabilistic function would try to maximize the Q function for a given function. <br>
 
 
 
