@@ -130,3 +130,154 @@ Here, the word *"it"* can refer to either *"animal"* or *"road."* The attention 
 ## Summary:
 The encoder-decoder architecture with attention dynamically adjusts focus based on the input sentence, enabling more accurate translations. By combining the power of sequential processing (RNNs) with a context-aware attention mechanism, this architecture significantly improves the quality of machine translation and similar tasks.
 
+Transformer Architecture
+
+# Transformer Architecture for Translation: "I love India" (English to Hindi)
+
+This explanation breaks down the steps of a Transformer model for translating *"I love India"* into Hindi.
+
+---
+
+## **Encoder Side**
+
+1. **Tokenization and Embedding:**  
+   - The input sentence is tokenized: `["I", "love", "my", "country"]`.  
+   - Each token is passed through an embedding layer, converting them into vector representations.  
+
+2. **Positional Encoding:**  
+   - Since Transformer processes tokens in parallel, positional encoding is added to the embeddings.  
+   - Positional encoding provides information about the order of tokens relative to each other.
+
+3. **Parallel Processing:**  
+   - The embedded tokens, now combined with positional encodings, are processed simultaneously by the encoder.  
+   - This results in a series of hidden states:  
+     ```
+     H = [h1, h2, h3, ..., hn]
+     ```
+
+---
+
+### **Self-Attention Mechanism**
+
+Self-attention helps determine how much focus each word should have on other words in the sentence.  
+
+#### **How It Works:**
+1. **Key Terms:**
+   - **Query (Q):** Represents the word in focus.  
+   - **Key (K):** Represents other words to compare against.  
+   - **Value (V):** The actual information associated with each word.  
+
+   These are derived using learned weight matrices (`Wq`, `Wk`, and `Wv`):  
+Q = X * Wq
+K = X * Wk
+V = X * Wv
+
+
+2. **Analogy:**  
+Think of searching for a book in a library:  
+- **Query:** Your topic of interest.  
+- **Key:** The titles of the books.  
+- **Value:** The content in the books.  
+
+3. **Attention Score Calculation:**
+- Compute the similarity score:  
+  ```
+  score = dot_product(Q, K)
+  ```
+- Scale the score:  
+  ```
+  score_scaled = score / sqrt(d_k)
+  ```
+- Normalize using softmax to get attention weights.  
+
+4. **Weighted Sum:**  
+Multiply attention weights with the Value vectors and sum them to obtain the final representation.
+
+---
+
+### **Multi-Head Attention**
+- Instead of a single set of `Wq`, `Wk`, and `Wv`, multiple sets are used, called attention heads.
+- Each head focuses on different aspects of the input, allowing the model to capture more nuanced relationships.
+- Outputs from all heads are concatenated and transformed back to the original dimension.
+
+---
+
+### **Feed Forward Network**
+- The output of the attention mechanism is passed through a feed-forward network.  
+- Residual connections are added to stabilize gradients and prevent sudden losses.  
+
+---
+
+## **Decoder Side**
+
+1. **Masked Attention:**  
+- Prevents the decoder from accessing future tokens during training.  
+- For example, while translating `"I"`, the model cannot see `"love"`, `"my"`, or `"country"`.  
+
+2. **Cross-Attention:**  
+- In this step, the decoder attends to the encoder’s hidden states.  
+- The decoder takes the encoder outputs (`H`) and the previously generated tokens as input to calculate attention scores.
+
+3. **Output Generation:**  
+- Tokens are generated one at a time until the `<EOS>` (End of Sentence) token is reached.
+
+---
+
+### **Summary**
+The Transformer architecture excels in handling parallel processing with mechanisms like self-attention and multi-head attention. By combining encoder and decoder layers, it achieves state-of-the-art performance in tasks like machine translation, efficiently generating contextually accurate translations.
+
+
+2. **Analogy:**  
+Think of searching for a book in a library:  
+- **Query:** Your topic of interest.  
+- **Key:** The titles of the books.  
+- **Value:** The content in the books.  
+
+3. **Attention Score Calculation:**
+- Compute the similarity score:  
+  ```
+  score = dot_product(Q, K)
+  ```
+- Scale the score:  
+  ```
+  score_scaled = score / sqrt(d_k)
+  ```
+- Normalize using softmax to get attention weights.  
+
+4. **Weighted Sum:**  
+Multiply attention weights with the Value vectors and sum them to obtain the final representation.
+
+---
+
+### **Multi-Head Attention**
+- Instead of a single set of `Wq`, `Wk`, and `Wv`, multiple sets are used, called attention heads.
+- Each head focuses on different aspects of the input, allowing the model to capture more nuanced relationships.
+- Outputs from all heads are concatenated and transformed back to the original dimension.
+
+---
+
+### **Feed Forward Network**
+- The output of the attention mechanism is passed through a feed-forward network.  
+- Residual connections are added to stabilize gradients and prevent sudden losses.  
+
+---
+
+## **Decoder Side**
+
+1. **Masked Attention:**  
+- Prevents the decoder from accessing future tokens during training.  
+- For example, while translating `"I"`, the model cannot see `"love"`, `"my"`, or `"country"`.  
+
+2. **Cross-Attention:**  
+- In this step, the decoder attends to the encoder’s hidden states.  
+- The decoder takes the encoder outputs (`H`) and the previously generated tokens as input to calculate attention scores.
+
+3. **Output Generation:**  
+- Tokens are generated one at a time until the `<EOS>` (End of Sentence) token is reached.
+
+---
+
+### **Summary**
+The Transformer architecture excels in handling parallel processing with mechanisms like self-attention and multi-head attention. By combining encoder and decoder layers, it achieves state-of-the-art performance in tasks like machine translation, efficiently generating contextually accurate translations.
+
+
