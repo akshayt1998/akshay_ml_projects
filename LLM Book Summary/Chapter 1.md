@@ -37,94 +37,96 @@ Preserves some degree of semantic meaning
 The end output is a static representation of the words. However, if the same word appears in a very different context tha was not present in the training data the results are not tha accurate </br>
 E.g. "I am standing at a bank". Here the word "bank" can have various meanings depending on the context which can't be adjusted for in the static represenation
 
-**3. Encoder Decoder with Attention Mechanism**
+**3. # Encoder-Decoder with Attention
 
-Tokenization:
-The input sentence is broken down into individual tokens: ['I', 'love', 'India']. These tokens are sequentially represented as:
+This is an RNN-based architecture that uses Recurrent Neural Networks (RNNs) on both the encoder and decoder sides. Let’s use an example of machine translation, where we want to translate the English sentence *"I love India"* into Hindi.
 
-rust
-Copy code
-x1 -> 'I'  
-x2 -> 'love'  
+## Encoder Side
+
+1. **Tokenization:**  
+   The input sentence is broken down into individual tokens: `['I', 'love', 'India']`. These tokens are sequentially represented as:  
+x1 -> 'I'
+x2 -> 'love'
 x3 -> 'India'
+
+
 Each token is then passed to the encoder one by one. The encoder is an RNN-based neural network that processes these tokens sequentially.
 
-Processing Tokens:
-At each time step, the encoder has two inputs:
+2. **Processing Tokens:**  
+At each time step, the encoder has two inputs:  
+- The current token (e.g., `x1` = `'I'`).  
+- The previous hidden state (e.g., `h0` for the initial step).  
 
-The current token (e.g., x1 = 'I').
-The previous hidden state (e.g., h0 for the initial step).
-At time t = 1:
+**At time `t = 1`:**  
+- Input token: `x1 = "I"`.  
+- Previous hidden state: `h0 = 0` (since it’s the first step).  
+- New hidden state: `h1 = F(h0, x1)` (calculated using the RNN function `F`).  
 
-Input token: x1 = "I".
-Previous hidden state: h0 = 0 (since it’s the first step).
-New hidden state: h1 = F(h0, x1) (calculated using the RNN function F).
-At time t = 2:
+**At time `t = 2`:**  
+- Input token: `x2 = "love"`.  
+- Previous hidden state: `h1`.  
+- New hidden state: `h2 = F(h1, x2)`.  
 
-Input token: x2 = "love".
-Previous hidden state: h1.
-New hidden state: h2 = F(h1, x2).
-This process continues until all tokens are processed, resulting in the final hidden state (h3) for the last token (x3 = 'India').
+This process continues until all tokens are processed, resulting in the final hidden state (`h3`) for the last token (`x3 = 'India'`).
 
-Final Hidden State:
-The final hidden state (h3) is a summary of the input sentence and contains both:
+3. **Final Hidden State:**  
+The final hidden state (`h3`) is a summary of the input sentence and contains both:  
+- The vector representation of the tokens processed so far.  
+- Information about the sequence order.
 
-The vector representation of the tokens processed so far.
-Information about the sequence order.
-Decoder Side
-The decoder is also an RNN-based architecture and operates after the encoder has processed the entire input sequence. The timeline of the decoder is independent of the encoder.
+## Decoder Side
 
-Initialization:
-At time t = 0, the decoder’s initial hidden state (s0) is set to the encoder’s final hidden state (h3).
+The decoder is also an RNN-based architecture and operates **after the encoder has processed the entire input sequence**. The timeline of the decoder is independent of the encoder.
 
-Hidden state: s0 = h3.
-Input token: y0 (a special start-of-sentence token added by the decoder).
-Context vector: c0 = h3 (initialized to the encoder’s final hidden state).
-Generating Output:
-At each time step, the decoder generates the next token based on:
+1. **Initialization:**  
+At time `t = 0`, the decoder’s initial hidden state (`s0`) is set to the encoder’s final hidden state (`h3`).  
 
-The previous hidden state.
-The previous output token.
-The context vector from the attention mechanism.
-For example:
+- Hidden state: `s0 = h3`.  
+- Input token: `y0` (a special start-of-sentence token added by the decoder).  
+- Context vector: `c0 = h3` (initialized to the encoder’s final hidden state).
 
-scss
-Copy code
-s1 = DecoderRNN(s0, y0, c0)
-y1 = softmax(Linear(s1))
-Attention Mechanism
+2. **Generating Output:**  
+At each time step, the decoder generates the next token based on:  
+- The previous hidden state.  
+- The previous output token.  
+- The context vector from the attention mechanism.
+
+For example:  
+s1 = DecoderRNN(s0, y0, c0) y1 = softmax(Linear(s1))
+
+## Attention Mechanism
+
 The attention mechanism ensures that the decoder focuses on relevant parts of the input sentence while generating each output token. This solves issues where the encoder’s final hidden state alone may not fully capture long or complex sentences.
 
-Context Vector (c1):
-Instead of using just the encoder’s final hidden state (h3), the context vector is computed as a weighted sum of all encoder hidden states (h1, h2, h3):
+1. **Context Vector (`c1`):**  
+Instead of using just the encoder’s final hidden state (`h3`), the context vector is computed as a weighted sum of all encoder hidden states (`h1, h2, h3`):  
 
-makefile
-Copy code
+
 c1 = α11h1 + α12h2 + α13h3
-αij represents the attention weight for the decoder’s hidden state at time t=1 with respect to the encoder’s hidden state at position j.
-Calculating Attention Weights:
 
-A similarity score is computed between the current decoder hidden state (s1) and each encoder hidden state (hi):
-scss
-Copy code
-score = dot_product(s1, hi)
-The scores are passed through a softmax function to normalize them:
-scss
-Copy code
-αij = softmax(score)
-This ensures that the attention weights sum up to 1.
-Using the Context Vector:
-The context vector is combined with the decoder hidden state to generate the next output:
+- `αij` represents the attention weight for the decoder’s hidden state at time `t=1` with respect to the encoder’s hidden state at position `j`.
 
-scss
-Copy code
-s2 = DecoderRNN(s1, y1, c1)
-y2 = softmax(Linear(s2))
-Example for Context:
-Consider the sentence: "The animal couldn't cross the road because it was injured."
-Here, the word "it" can refer to either "animal" or "road." The attention mechanism helps resolve such ambiguities by assigning higher weights to the relevant parts of the input sequence, ensuring that the model generates contextually accurate translations.
+2. **Calculating Attention Weights:**  
+- A similarity score is computed between the current decoder hidden state (`s1`) and each encoder hidden state (`hi`):  
+  ```
+  score = dot_product(s1, hi)
+  ```
+- The scores are passed through a softmax function to normalize them:  
+  ```
+  αij = softmax(score)
+  ```
+  This ensures that the attention weights sum up to 1.
 
-Summary:
+3. **Using the Context Vector:**  
+The context vector is combined with the decoder hidden state to generate the next output:  
+s2 = DecoderRNN(s1, y1, c1) y2 = softmax(Linear(s2))
+
+
+## Example for Context:
+
+Consider the sentence: *"The animal couldn't cross the road because it was injured."*  
+Here, the word *"it"* can refer to either *"animal"* or *"road."* The attention mechanism helps resolve such ambiguities by assigning higher weights to the relevant parts of the input sequence, ensuring that the model generates contextually accurate translations.
+
+## Summary:
 The encoder-decoder architecture with attention dynamically adjusts focus based on the input sentence, enabling more accurate translations. By combining the power of sequential processing (RNNs) with a context-aware attention mechanism, this architecture significantly improves the quality of machine translation and similar tasks.
-
 
